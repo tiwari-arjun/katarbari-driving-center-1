@@ -1,0 +1,8 @@
+{
+  "name": "Katarbari Driving Center - Waling, Syangja",
+  "description": "Looking for a driving school in Waling, Syangja? Contact Katarbari Driving Center for scooter, motorbike and car driving training. Call 9856011009.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

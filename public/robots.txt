@@ -1,0 +1,10 @@
+# robots.txt for Katarbari Driving Center
+User-agent: *
+Allow: /
+
+# Disallow private API endpoints and admin routes
+Disallow: /api/
+Disallow: /#admin
+
+# Sitemap location
+Sitemap: /sitemap.xml

@@ -1,0 +1,179 @@
+{
+  "seo": {
+    "defaultTitle": "Katarbari Driving Center | Driving School in Waling, Syangja",
+    "defaultDescription": "Looking for a driving school in Waling, Syangja? Contact Katarbari Driving Center for scooter, motorbike and car driving training. Call 9856011009."
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "courses": "Courses",
+    "services": "Services",
+    "trialTrack": "Trial Field",
+    "practice": "Written Test Practice",
+    "eyeTest": "Eye Test Practice",
+    "pricing": "Fee Structure",
+    "register": "Enroll Now",
+    "contact": "Contact Us",
+    "callNow": "Call Us",
+    "admin": "Admin Portal"
+  },
+  "courses": {
+    "badge": "OUR COURSES",
+    "title": "Choose Your Driving Course",
+    "description": "Start your driving journey with expert guidance, practical training, and confidence on the road.",
+    "enrollBtn": "Enroll Now",
+    "enquireWhatsApp": "Enquire on WhatsApp",
+    "enrollModalTitle": "Enroll in Course",
+    "selectMethod": "Choose how you'd like to proceed with your enrollment:",
+    "formOptionTitle": "Official Online Registration Form",
+    "formOptionDesc": "Complete our instant enrollment form with your details & preferred shift.",
+    "whatsAppOptionTitle": "Instant WhatsApp Inquiry",
+    "whatsAppOptionDesc": "Chat directly with our Waling office instructor with a prefilled course message.",
+    "close": "Close",
+    "featuresHeader": "Course Highlights:"
+  },
+  "hero": {
+    "badge": "Licensed & Certified Driving School in Syangja",
+    "headline": "Learn to Drive. Drive with Confidence.",
+    "subheadline": "Professional motorcycle, scooter, and four-wheeler training under experienced instructors in Waling-11, Syangja. Master practical driving skills and pass your official license test.",
+    "ctaClasses": "Explore Our Courses",
+    "ctaPractice": "Written Test Practice",
+    "ctaWhatsApp": "Chat on WhatsApp",
+    "locationBadge": "Waling-11, Syangja, Gandaki Province",
+    "statStudents": "1,800+ Drivers Trained",
+    "statPassRate": "High First-Try Success",
+    "statExperience": "Dedicated Driving Center"
+  },
+  "whyUs": {
+    "title": "Why Choose Katarbari Driving Center?",
+    "subtitle": "We equip you with lifelong defensive driving skills, not just test memorization.",
+    "feature1Title": "Certified Instructors",
+    "feature1Desc": "Patient, experienced trainers dedicated to your road safety and individual learning pace.",
+    "feature2Title": "Standard Trial Track",
+    "feature2Desc": "Dedicated trial practice yard replicating authentic DoTM Nepal exam grounds (8-shape, slopes, garage parking).",
+    "feature3Title": "Flexible Shift Schedules",
+    "feature3Desc": "Morning, day, and evening shifts tailored for students, teachers, and working professionals.",
+    "feature4Title": "Exam Preparation Support",
+    "feature4Desc": "Comprehensive 300+ bilingual DoTM written test preparation and Ishihara eye test practice."
+  },
+  "services": {
+    "title": "Our Training Programs",
+    "subtitle": "Tailored packages designed for beginners and intermediate drivers in Waling and Syangja.",
+    "catA": {
+      "title": "Motorcycle & Scooter (Category A & K)",
+      "desc": "Master 8-turns, narrow planks, speed control, and emergency braking with safety gear.",
+      "duration": "15 – 21 Days",
+      "features": ["Balance & Clutch Training", "Official '8' Shape Practice", "Narrow Plank & Speed Control", "Pre-trial Simulation"]
+    },
+    "catB": {
+      "title": "Light Motor Vehicles / Car (Category B)",
+      "desc": "Comprehensive training including clutch control, L-parking, T-parking, steep incline (ramp) start, and road driving.",
+      "duration": "20 – 30 Days",
+      "features": ["Dual-Control Practice Cars", "Steep Ramp Start (Uphill)", "T & L Garage Parking", "Siddhartha Highway Road Drive"]
+    },
+    "refresher": {
+      "title": "Refresher & License Trial Preparation",
+      "desc": "Targeted test track rehearsal and highway confidence classes for license applicants and returning drivers.",
+      "duration": "5 – 10 Days",
+      "features": ["Trial Yard Track Only", "Parallel Parking Mastery", "Defensive Highway Driving", "Custom Hourly Shifts"]
+    }
+  },
+  "trialField": {
+    "badge": "Standard DoTM Replica",
+    "title": "Our Standardized Trial Practice Field",
+    "subtitle": "Train on exact dimensions specified by the Nepal Transport Management Office so you feel 100% prepared on your exam day.",
+    "step1": "Figure '8' Track",
+    "step1Desc": "Engineered radius for two-wheelers and four-wheelers without foot touching or stalling.",
+    "step2": "Steep Ramp / Incline",
+    "step2Desc": "Yellow stop box with zero roll-back gradient training.",
+    "step3": "Garage Parking (L & T)",
+    "step3Desc": "Precision reverse and forward bay parking with guide poles.",
+    "step4": "Traffic Light & Zebra",
+    "step4Desc": "Simulated signals and pedestrian safety checks."
+  },
+  "quizIntro": {
+    "badge": "Nepal DoTM License Prep",
+    "title": "Driving License Written Exam Practice",
+    "subtitle": "Practice authentic questions categorized by traffic signs, rules, vehicle knowledge, and road safety. Prepare in English, Nepali, or both simultaneously.",
+    "chooseLanguageLabel": "Choose Your Practice Language",
+    "modeEn": "English Only",
+    "modeNe": "नेपाली मात्र (Nepali Only)",
+    "modeBoth": "Both Languages (बन्दोबस्त / द्विभाषिक)",
+    "chooseCategoryLabel": "Select Question Category",
+    "allCategories": "All Categories Combined",
+    "startBtn": "Start Practice Test",
+    "ruleNote": "Total questions available • Pass mark 70% • Instant explanations and progress memory included"
+  },
+  "quiz": {
+    "questionCount": "Question {{current}} of {{total}}",
+    "prevBtn": "Previous Question",
+    "nextBtn": "Next Question",
+    "submitBtn": "Submit Answer",
+    "finishBtn": "Finish Test",
+    "correct": "Correct Answer!",
+    "incorrect": "Incorrect Answer",
+    "explanationTitle": "Explanation:",
+    "confirmFinish": "Are you sure you want to finish the exam now?",
+    "scoreLabel": "Your Score",
+    "passedBadge": "PASSED - Excellent Work!",
+    "failedBadge": "NEEDS PRACTICE - Review mistakes and retry",
+    "summaryTitle": "Test Performance Summary",
+    "totalQuestions": "Total Questions",
+    "correctAnswers": "Correct Answers",
+    "wrongAnswers": "Incorrect Answers",
+    "percentage": "Percentage",
+    "retakeBtn": "Take Test Again",
+    "reviewWrongBtn": "Review Incorrect Answers",
+    "allQuestionsBtn": "Review All Answers",
+    "backToConfig": "Change Exam Settings",
+    "inExamToggle": "Display Mode:"
+  },
+  "registration": {
+    "badge": "Online Enrollment",
+    "title": "Register for Driving Classes",
+    "subtitle": "Submit your details to reserve your preferred batch. Our Waling office will contact you directly.",
+    "formNotice": "Please submit your details via our verified enrollment form below.",
+    "openFormBtn": "Open Registration Form",
+    "phoneInquiry": "Direct Phone Consultation",
+    "operatingHours": "Direct Office Contact: 9856011009",
+    "instantEnroll": "Quick Enrollment Booking",
+    "fullName": "Full Name",
+    "phone": "Phone Number",
+    "preferredCategory": "Vehicle Category",
+    "preferredTime": "Preferred Shift",
+    "morning": "Morning (6:00 AM - 10:00 AM)",
+    "day": "Day (11:00 AM - 3:00 PM)",
+    "evening": "Evening (3:00 PM - 6:00 PM)",
+    "notes": "Any questions or previous experience?",
+    "submitBooking": "Submit Enrollment Request",
+    "bookingSuccess": "Thank you! Your enrollment request has been recorded. Our Waling office will call you shortly."
+  },
+  "whatsapp": {
+    "floatingLabel": "Chat on WhatsApp",
+    "message": "Hello Katarbari Driving Center, I would like to know more about your driving courses."
+  },
+  "testimonials": {
+    "title": "What Our Students in Syangja Say",
+    "subtitle": "Real experiences from learners who trained with us."
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Common inquiries about licensing, trial tests, and training requirements in Nepal.",
+    "q1": "What documents are required to apply for a driving license in Nepal?",
+    "a1": "You need an original Nepali Citizenship Certificate (Nagarikta), passport-sized photographs, blood group test report, and medical vision clearance report.",
+    "q2": "What is the pass criteria for the DoTM 70-point trial system?",
+    "a2": "Under Nepal's trial assessment system, applicants need a minimum of 70 points out of 100 to pass. Minor errors (such as one foot touch on figure 8) carry point deductions without immediate failure.",
+    "q3": "Can I choose my daily practice time slot?",
+    "a3": "Yes, we offer flexible training shifts throughout the day so students and working professionals can practice at convenient hours."
+  },
+  "footer": {
+    "tagline": "Empowering safe and confident drivers in Waling, Syangja and Gandaki Province, Nepal.",
+    "quickLinks": "Quick Navigation",
+    "contactHeader": "Contact Information",
+    "address": "Waling-11, Syangja, Gandaki Province, Nepal",
+    "phone": "9856011009",
+    "owner": "Owner: Khem Kanta Tiwari",
+    "disclaimer": "Notice: Practice materials provided on this platform are strictly for student educational training and preparation. For official regulatory exams and smart license issuance, consult the Department of Transport Management (DoTM), Nepal.",
+    "rights": "All rights reserved. Katarbari Driving Center."
+  }
+}

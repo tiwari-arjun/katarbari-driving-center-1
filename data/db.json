@@ -1,0 +1,142 @@
+{
+  "admins": [
+    {
+      "id": "admin-1",
+      "username": "admin",
+      "passwordHash": "c60f1079787483a166545f24e389aebc99c5c598c29805dc074f855f35f208a21238dadf668ff559f96fc6be91833ded0bff7d1fd0660fd129aa66e2d8b318e7",
+      "salt": "2e052cc8afe92fff3a93dbddddb430a7",
+      "role": "SuperAdmin",
+      "createdAt": "2026-10-24T04:04:43.321Z"
+    }
+  ],
+  "sessions": {
+    "94a309a5e5235235bcafbc2937d18f60af30a0419875d36366ed1187143ee306": {
+      "adminId": "admin-1",
+      "username": "admin",
+      "expiresAt": 1792901121062
+    },
+    "bd682dcf3bf93d90fdecef9db26f5c4236c6a7cf688fdc63353d3c9c1bafab0a": {
+      "adminId": "admin-1",
+      "username": "admin",
+      "expiresAt": 1792901131908
+    },
+    "56fa6ba2391ca5d927148f42f7b07d33d2a17af613888675fa4f3d05ed0d6039": {
+      "adminId": "admin-1",
+      "username": "admin",
+      "expiresAt": 1792901189500
+    },
+    "35ec32380dd967dc922fc966082790586931d40bed9894cee94d308dbc21aac7": {
+      "adminId": "admin-1",
+      "username": "admin",
+      "email": "admin@katarbari.com",
+      "role": "SuperAdmin",
+      "expiresAt": 1792901233337
+    }
+  },
+  "students": [
+    {
+      "id": "STU-101",
+      "fullName": "Bikash Shrestha",
+      "phone": "9856012345",
+      "category": "Category B (Car / Jeep)",
+      "shift": "Morning (6:00 AM - 10:00 AM)",
+      "notes": "Trial preparation for Pokhara DoTM",
+      "status": "In Training",
+      "paymentStatus": "Paid",
+      "createdAt": "2026-10-22T04:04:43.322Z"
+    },
+    {
+      "id": "STU-102",
+      "fullName": "Sita Gurung",
+      "phone": "9846098765",
+      "category": "Category K (Scooter)",
+      "shift": "Evening (3:00 PM - 6:00 PM)",
+      "notes": "Beginner learner from Waling Bazar",
+      "status": "Confirmed",
+      "paymentStatus": "Partial",
+      "createdAt": "2026-10-23T04:04:43.322Z"
+    },
+    {
+      "id": "KDC-846450",
+      "fullName": "Ramesh Gurung",
+      "phone": "9856099999",
+      "category": "Category B (Car / Jeep)",
+      "shift": "Morning (6:00 AM - 10:00 AM)",
+      "notes": "Waling 1",
+      "status": "Pending",
+      "paymentStatus": "Pending",
+      "createdAt": "2026-10-24T04:07:26.450Z"
+    }
+  ],
+  "enquiries": [
+    {
+      "id": "ENQ-01",
+      "fullName": "Dipak Thapa",
+      "phone": "9806511223",
+      "course": "Motorbike Training",
+      "message": "Interested in early morning 6 AM batch before office",
+      "status": "New",
+      "createdAt": "2026-10-24T04:04:43.322Z"
+    },
+    {
+      "id": "ENQ-46462",
+      "fullName": "Anjali Thapa",
+      "phone": "9846011111",
+      "course": "Scooter Training",
+      "message": "Need evening slot",
+      "status": "New",
+      "createdAt": "2026-10-24T04:07:26.462Z"
+    }
+  ],
+  "courses": [
+    {
+      "id": "scooter-course",
+      "vehicleType": "scooter",
+      "nameEn": "Scooter Training",
+      "nameNe": "स्कुटर तालिम",
+      "price": "रु. ६,०००",
+      "priceNumeric": 6000,
+      "duration": "15 Days Package",
+      "descriptionEn": "Learn scooter riding from the basics, balance, controls, turning, braking, and road safety.",
+      "descriptionNe": "स्कुटरको आधारभूत सीप, सन्तुलन, नियन्त्रण, मोड्ने तरिका, ब्रेक र सुरक्षित सडक अभ्यास।",
+      "active": true
+    },
+    {
+      "id": "motorbike-course",
+      "vehicleType": "motorbike",
+      "nameEn": "Motorbike Training",
+      "nameNe": "मोटरसाइकल तालिम",
+      "price": "रु. ८,०००",
+      "priceNumeric": 8000,
+      "duration": "21 Days Package",
+      "descriptionEn": "Motorcycle handling, clutch control, gear shifting, turning, and road awareness.",
+      "descriptionNe": "मोटरसाइकल नियन्त्रण, क्लचको प्रयोग, गियर परिवर्तन र सडक सचेतना।",
+      "active": true
+    },
+    {
+      "id": "car-course",
+      "vehicleType": "car",
+      "nameEn": "Car Driving Training",
+      "nameNe": "कार ड्राइभिङ तालिम",
+      "price": "रु. १२,०००",
+      "priceNumeric": 12000,
+      "duration": "30 Days Comprehensive",
+      "descriptionEn": "Essential car driving skills, steering, braking, parking, ramp climbing, and highway driving.",
+      "descriptionNe": "कार चलाउने आधारभूत सीप, स्टेयरिङ, पार्किङ, र्याम्प उठाउने र सडक अभ्यास।",
+      "active": true
+    }
+  ],
+  "analytics": {
+    "totalWrittenAttempts": 49,
+    "totalEyeTestAttempts": 32,
+    "passedWrittenAttempts": 43,
+    "recentScores": [
+      {
+        "testType": "written",
+        "score": 18,
+        "total": 20,
+        "timestamp": "2026-10-24T04:07:26.474Z"
+      }
+    ]
+  }
+}
