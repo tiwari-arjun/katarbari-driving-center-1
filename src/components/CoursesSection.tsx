@@ -14,6 +14,7 @@ import {
   Tag,
   PhoneCall
 } from 'lucide-react';
+import { TiltCard, ScrollReveal } from './motion/AppleMotion';
 
 interface CoursesSectionProps {
   onSelectCourseForRegistration?: (categoryValue: string) => void;
@@ -97,8 +98,8 @@ export default function CoursesSection({ onSelectCourseForRegistration, refreshT
     <section id="courses" className="py-20 sm:py-28 bg-slate-50 border-t border-slate-200 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* 1. SECTION HEADER - Clean Editorial */}
-        <div className="max-w-3xl mx-auto text-center mb-16">
+        {/* 1. SECTION HEADER - Clean Editorial with Scroll Reveal */}
+        <ScrollReveal className="max-w-3xl mx-auto text-center mb-16">
           <p className="text-xs font-bold uppercase tracking-widest text-red-600 mb-2 font-ne">
             {isNepali ? "वालिङ, स्याङ्जा ड्राइभिङ प्रशिक्षण" : "Training Programs • Waling, Syangja"}
           </p>
@@ -108,11 +109,11 @@ export default function CoursesSection({ onSelectCourseForRegistration, refreshT
           <p className="mt-4 text-base sm:text-lg text-slate-600 font-ne leading-relaxed">
             {t('courses.description')}
           </p>
-        </div>
+        </ScrollReveal>
 
-        {/* 2. THREE COURSE CARDS GRID - Editorial Automotive Style */}
+        {/* 2. THREE COURSE CARDS GRID - Editorial Automotive Style with 3D Tilt */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
-          {liveCourses.map((course) => {
+          {liveCourses.map((course, idx) => {
             const courseName = course.name[isNepali ? 'ne' : 'en'];
             const courseBadge = course.badge[isNepali ? 'ne' : 'en'];
             const courseDesc = course.description[isNepali ? 'ne' : 'en'];
@@ -122,133 +123,142 @@ export default function CoursesSection({ onSelectCourseForRegistration, refreshT
             const courseImg = getCourseImage(course.vehicleType);
 
             return (
-              <div
-                key={course.id}
-                className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between"
-              >
-                <div>
-                  {/* Photo Header */}
-                  <div className="relative aspect-16/10 overflow-hidden bg-slate-100 border-b border-slate-100">
-                    <img 
-                      src={courseImg} 
-                      alt={courseName}
-                      className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" 
-                      loading="lazy"
-                    />
-                    <div className="absolute top-3 left-3 bg-slate-900/90 text-white text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded font-ne">
-                      {courseBadge}
-                    </div>
-                    {isCar && (
-                      <div className="absolute top-3 right-3 bg-red-600 text-white text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded font-ne">
-                        {isNepali ? "लोकप्रिय प्याकेज" : "Most Popular"}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Content Container */}
-                  <div className="p-6">
-                    <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 mb-2 font-ne">
-                      <Clock className="w-3.5 h-3.5 text-slate-400" />
-                      <span>{courseDuration}</span>
-                    </div>
-
-                    <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2.5 font-ne">
-                      {courseName}
-                    </h3>
-
-                    <p className="text-sm text-slate-600 font-ne leading-relaxed mb-6">
-                      {courseDesc}
-                    </p>
-
-                    {/* Exact Price Display */}
-                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 mb-6 flex items-center justify-between">
-                      <span className="text-xs uppercase font-bold text-slate-500 font-ne">
-                        {isNepali ? "कोर्स शुल्क (Exact Fee):" : "Official Course Fee:"}
-                      </span>
-                      <span className="text-2xl font-black text-slate-900 tracking-tight font-ne">
-                        {isNepali ? course.priceNe : course.priceEn}
-                      </span>
-                    </div>
-
-                    {/* Features list */}
-                    <div className="space-y-2.5">
-                      <div className="text-xs font-bold uppercase tracking-wider text-slate-400 font-ne">
-                        {t('courses.featuresHeader')}
-                      </div>
-                      {courseFeatures.map((feat, fIdx) => (
-                        <div key={fIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 font-ne">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                          <span>{feat}</span>
+              <ScrollReveal key={course.id} delay={idx * 0.1} className="h-full">
+                <TiltCard maxTilt={2.5} scaleOnHover={1.018} className="h-full">
+                  <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-xl hover:border-red-200/80 transition-all duration-300 flex flex-col justify-between group h-full">
+                    <div>
+                      {/* Photo Header with smooth scale effect */}
+                      <div className="relative aspect-16/10 overflow-hidden bg-slate-100 border-b border-slate-100">
+                        <img 
+                          src={courseImg} 
+                          alt={courseName}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
+                          loading="lazy"
+                        />
+                        <div className="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-xs text-white text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded shadow-xs font-ne">
+                          {courseBadge}
                         </div>
-                      ))}
+                        {isCar && (
+                          <div className="absolute top-3 right-3 bg-red-600 text-white text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded shadow-xs font-ne">
+                            {isNepali ? "लोकप्रिय प्याकेज" : "Most Popular"}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Content Container */}
+                      <div className="p-6">
+                        <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 mb-2 font-ne">
+                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          <span>{courseDuration}</span>
+                        </div>
+
+                        <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2.5 font-ne group-hover:text-red-600 transition-colors duration-200">
+                          {courseName}
+                        </h3>
+
+                        <p className="text-sm text-slate-600 font-ne leading-relaxed mb-6">
+                          {courseDesc}
+                        </p>
+
+                        {/* Exact Price Display */}
+                        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 mb-6 flex items-center justify-between group-hover:bg-red-50/30 group-hover:border-red-100 transition-colors duration-300">
+                          <span className="text-xs uppercase font-bold text-slate-500 font-ne">
+                            {isNepali ? "कोर्स शुल्क (Exact Fee):" : "Official Course Fee:"}
+                          </span>
+                          <span className="text-2xl font-black text-slate-900 tracking-tight font-ne">
+                            {isNepali ? course.priceNe : course.priceEn}
+                          </span>
+                        </div>
+
+                        {/* Features list */}
+                        <div className="space-y-2.5">
+                          <div className="text-xs font-bold uppercase tracking-wider text-slate-400 font-ne">
+                            {t('courses.featuresHeader')}
+                          </div>
+                          {courseFeatures.map((feat, fIdx) => (
+                            <div key={fIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 font-ne">
+                              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                              <span>{feat}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="p-6 pt-2 border-t border-slate-100 bg-white">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <button
+                          type="button"
+                          onClick={() => handleEnrollClick(course)}
+                          className="w-full py-3 px-4 bg-slate-900 hover:bg-red-600 active:scale-[0.98] text-white font-bold rounded-lg transition-all duration-200 text-xs sm:text-sm flex items-center justify-center gap-1.5 cursor-pointer font-ne shadow-xs hover:shadow-md"
+                        >
+                          <span>{t('courses.enrollBtn')}</span>
+                          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
+                        </button>
+
+                        <a
+                          href={getWhatsAppUrl(course)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-3 px-3 bg-white hover:bg-slate-50 active:scale-[0.98] text-slate-800 border border-slate-300 hover:border-slate-400 font-bold rounded-lg transition-all duration-200 text-xs flex items-center justify-center gap-1.5 font-ne cursor-pointer"
+                        >
+                          <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>WhatsApp</span>
+                        </a>
+                      </div>
                     </div>
                   </div>
-                </div>
-
-                {/* Actions */}
-                <div className="p-6 pt-2 border-t border-slate-100 bg-white">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <button
-                      type="button"
-                      onClick={() => handleEnrollClick(course)}
-                      className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg transition-colors text-xs sm:text-sm flex items-center justify-center gap-1.5 cursor-pointer font-ne"
-                    >
-                      <span>{t('courses.enrollBtn')}</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-
-                    <a
-                      href={getWhatsAppUrl(course)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full py-3 px-3 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-bold rounded-lg transition-colors text-xs flex items-center justify-center gap-1.5 font-ne cursor-pointer"
-                    >
-                      <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>WhatsApp</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
+                </TiltCard>
+              </ScrollReveal>
             );
           })}
         </div>
 
-        {/* Trust banner underneath courses */}
-        <div className="mt-12 p-6 rounded-2xl bg-white border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-5 h-5" />
+        {/* Trust banner underneath courses with subtle reveal */}
+        <ScrollReveal delay={0.15}>
+          <div className="mt-12 p-6 rounded-2xl bg-white border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 hover:shadow-md transition-all duration-300">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="font-bold text-slate-900 text-sm font-ne">
+                  {isNepali ? "सरकारी यातायात कार्यालय (DoTM) मापदण्ड अनुसारको तालिम" : "Government DoTM Compliant Driving Instruction"}
+                </p>
+                <p className="text-xs text-slate-500 font-ne">
+                  {isNepali ? "वालिङ नगरपालिका-११, स्याङ्जा स्थित आफ्नै विस्तृत ट्रायल फिल्डमा पूर्ण अभ्यास गराइन्छ।" : "Full practical instruction conducted on our dedicated trial field in Waling-11, Syangja."}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="font-bold text-slate-900 text-sm font-ne">
-                {isNepali ? "सरकारी यातायात कार्यालय (DoTM) मापदण्ड अनुसारको तालिम" : "Government DoTM Compliant Driving Instruction"}
-              </p>
-              <p className="text-xs text-slate-500 font-ne">
-                {isNepali ? "वालिङ नगरपालिका-११, स्याङ्जा स्थित आफ्नै विस्तृत ट्रायल फिल्डमा पूर्ण अभ्यास गराइन्छ।" : "Full practical instruction conducted on our dedicated trial field in Waling-11, Syangja."}
-              </p>
-            </div>
+            <a
+              href="tel:9856011009"
+              className="shrink-0 inline-flex items-center gap-2 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 active:scale-95 px-4 py-2.5 rounded-lg transition-all duration-200"
+            >
+              <PhoneCall className="w-3.5 h-3.5 text-red-600" />
+              <span>Call 9856011009</span>
+            </a>
           </div>
-          <a
-            href="tel:9856011009"
-            className="shrink-0 inline-flex items-center gap-2 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 px-4 py-2.5 rounded-lg transition"
-          >
-            <PhoneCall className="w-3.5 h-3.5 text-red-600" />
-            <span>Call 9856011009</span>
-          </a>
-        </div>
+        </ScrollReveal>
 
       </div>
 
-      {/* 3. ENROLLMENT MODAL */}
+      {/* 3. ENROLLMENT MODAL WITH REFINED MOTION TRANSITION */}
       <AnimatePresence>
         {selectedCourse && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs"
+          >
             <motion.div
-              initial={{ opacity: 0, scale: 0.98, y: 15 }}
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.98, y: 15 }}
-              transition={{ duration: 0.2 }}
-              className="bg-white rounded-2xl shadow-xl max-w-md w-full border border-slate-200 overflow-hidden relative"
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden relative"
             >
               {/* Modal Header */}
               <div className="bg-slate-900 text-white p-5 flex items-center justify-between">
@@ -345,7 +355,7 @@ export default function CoursesSection({ onSelectCourseForRegistration, refreshT
               </div>
 
             </motion.div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
 

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { motion, AnimatePresence } from 'motion/react';
 import { ShieldCheck, Flag, CheckCircle, Info } from 'lucide-react';
+import { ScrollReveal, TiltCard } from './motion/AppleMotion';
 
 export default function TrialFieldGuide() {
   const { t } = useTranslation();
@@ -45,7 +47,7 @@ export default function TrialFieldGuide() {
     <section id="trial-field" className="py-20 bg-white scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="text-center max-w-3xl mx-auto mb-14">
+        <ScrollReveal className="text-center max-w-3xl mx-auto mb-14">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-800 font-bold text-xs uppercase tracking-wider rounded-full mb-3">
             <ShieldCheck className="w-3.5 h-3.5" />
             {t('trialField.badge')}
@@ -56,37 +58,62 @@ export default function TrialFieldGuide() {
           <p className="mt-3 text-slate-600 font-ne">
             {t('trialField.subtitle')}
           </p>
-        </div>
+        </ScrollReveal>
 
-        {/* Step Tabs */}
+        {/* Step Tabs with Apple-style animated sliding pill */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-          {steps.map((step, idx) => (
-            <button
-              key={step.id}
-              type="button"
-              onClick={() => setActiveStep(idx)}
-              className={`p-4 rounded-2xl border-2 text-left transition-all cursor-pointer flex flex-col justify-between ${
-                activeStep === idx
-                  ? 'border-brand-600 bg-brand-50/80 shadow-md ring-2 ring-brand-500/20'
-                  : 'border-slate-200 bg-slate-50 hover:bg-white hover:border-slate-300'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-2xl">{step.icon}</span>
-                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${activeStep === idx ? 'bg-brand-600 text-white' : 'bg-slate-200 text-slate-700'}`}>
-                  Part {idx + 1}
-                </span>
-              </div>
-              <div>
-                <h4 className="font-bold text-slate-900 text-sm font-ne">{step.title}</h4>
-              </div>
-            </button>
-          ))}
+          {steps.map((step, idx) => {
+            const isActive = activeStep === idx;
+            return (
+              <motion.button
+                key={step.id}
+                type="button"
+                onClick={() => setActiveStep(idx)}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-30px" }}
+                transition={{ duration: 0.4, delay: idx * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className={`relative p-4 rounded-2xl border-2 text-left transition-all duration-200 cursor-pointer flex flex-col justify-between overflow-hidden ${
+                  isActive
+                    ? 'border-red-600 shadow-md ring-2 ring-red-500/20'
+                    : 'border-slate-200 bg-slate-50 hover:bg-white hover:border-slate-300 hover:shadow-xs'
+                }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="trial-active-pill"
+                    className="absolute inset-0 bg-red-50/90 z-0"
+                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                  />
+                )}
+                <div className="relative z-10 w-full flex items-center justify-between mb-2">
+                  <span className="text-2xl">{step.icon}</span>
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full transition-colors ${isActive ? 'bg-red-600 text-white' : 'bg-slate-200 text-slate-700'}`}>
+                    Part {idx + 1}
+                  </span>
+                </div>
+                <div className="relative z-10">
+                  <h4 className="font-bold text-slate-900 text-sm font-ne">{step.title}</h4>
+                </div>
+              </motion.button>
+            );
+          })}
         </div>
 
-        {/* Active Step Detailed Card */}
-        <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl overflow-hidden relative">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        {/* Active Step Detailed Card with Cinematic TiltCard */}
+        <TiltCard maxTilt={1.5} scaleOnHover={1.01} className="w-full">
+          <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl overflow-hidden relative border border-slate-800">
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={activeStep}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center"
+              >
             
             <div>
               <div className="flex items-center gap-2 mb-3">
@@ -195,8 +222,10 @@ export default function TrialFieldGuide() {
               )}
             </div>
 
+            </motion.div>
+          </AnimatePresence>
           </div>
-        </div>
+        </TiltCard>
 
       </div>
     </section>

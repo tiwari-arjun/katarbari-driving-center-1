@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'motion/react';
 import { Phone, Clock, MapPin, CheckCircle, ExternalLink, Calendar, Send } from 'lucide-react';
+import { ScrollReveal } from './motion/AppleMotion';
 
 interface RegistrationAndInquiryProps {
   selectedCategory?: string;
@@ -72,8 +74,8 @@ export default function RegistrationAndInquiry({ selectedCategory }: Registratio
     <section id="register" className="py-20 bg-white scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header */}
-        <div className="text-center mb-16">
+        {/* Header with Scroll Reveal */}
+        <ScrollReveal className="text-center mb-16">
           <span className="text-brand-700 bg-brand-50 border border-brand-200 font-bold px-3 py-1 rounded-full text-xs uppercase tracking-wide inline-flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5" />
             {t('registration.badge')}
@@ -84,12 +86,18 @@ export default function RegistrationAndInquiry({ selectedCategory }: Registratio
           <p className="mt-3 text-slate-600 max-w-xl mx-auto font-ne">
             {t('registration.subtitle')}
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           
           {/* Information & Hours */}
-          <div className="bg-slate-50 border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 lg:sticky lg:top-28">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="bg-slate-50 border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 lg:sticky lg:top-28 shadow-xs hover:shadow-md transition-shadow duration-300"
+          >
             <div>
               <h3 className="font-bold text-slate-900 text-lg mb-2 flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-red-600" />
@@ -112,23 +120,22 @@ export default function RegistrationAndInquiry({ selectedCategory }: Registratio
                 {CONTACT_PHONE}
               </a>
               <span className="text-xs text-slate-500 font-ne mt-0.5 block">
-                {isNepali ? "सिधा फोन वा ह्वाट्सएपमा सम्पर्क गर्नुहोस्" : "Direct call or WhatsApp inquiry"}
+                {isNepali ? "सिधा फोन वा ह्वाट्सएप (WhatsApp) मा सम्पर्क गर्नुहोस्" : "Direct phone call or WhatsApp inquiry"}
               </span>
             </div>
 
             <div className="border-t border-slate-200 pt-5">
               <h4 className="font-bold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
-                <Phone className="w-4 h-4 text-red-600" />
-                {t('registration.phoneInquiry')}
+                <Clock className="w-4 h-4 text-red-600" />
+                {isNepali ? "तालिम समय (Shifts)" : "Training Shifts & Hours"}
               </h4>
-              <a 
-                href={`tel:${CONTACT_PHONE}`}
-                className="text-slate-900 hover:text-red-600 font-extrabold text-xl tracking-tight transition-colors block"
-              >
-                {CONTACT_PHONE}
-              </a>
-              <span className="text-xs text-slate-500 font-ne mt-0.5 block">
-                {isNepali ? "सिधा फोन वा ह्वाट्सएप (WhatsApp) मा सम्पर्क गर्नुहोस्" : "Direct phone call or WhatsApp inquiry"}
+              <p className="text-xs text-slate-600 font-ne leading-relaxed">
+                {isNepali 
+                  ? "बिहान: ६:०० - १०:०० | दिउँसो: ११:०० - ३:०० | साँझ: ३:०० - ६:००" 
+                  : "Morning: 6:00 AM - 10:00 AM | Day: 11:00 AM - 3:00 PM | Evening: 3:00 PM - 6:00 PM"}
+              </p>
+              <span className="text-xs text-slate-500 font-ne mt-1 block">
+                {isNepali ? "हप्ताको ७ दिन नै खुला (आइतबार - शनिबार)" : "Open 7 days a week (Sun - Sat)"}
               </span>
             </div>
 
@@ -143,23 +150,34 @@ export default function RegistrationAndInquiry({ selectedCategory }: Registratio
                 <ExternalLink className="w-4 h-4" />
               </a>
             </div>
-          </div>
+          </motion.div>
 
           {/* Interactive Fast Enrollment Form + Google Form option */}
-          <div className="lg:col-span-2 bg-slate-50 border border-slate-200 rounded-3xl p-6 sm:p-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:col-span-2 bg-slate-50 border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xs hover:shadow-md transition-shadow duration-300"
+          >
             <div className="mb-6 flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-200">
               <div>
                 <h3 className="text-xl font-bold text-slate-900">{t('registration.instantEnroll')}</h3>
                 <p className="text-xs text-slate-500 font-ne mt-0.5">{t('registration.formNotice')}</p>
               </div>
-              <span className="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2.5 py-1 rounded-full flex items-center gap-1">
+              <span className="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2.5 py-1 rounded-full flex items-center gap-1 font-ne">
                 <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                 Seats Open for Syangja Batches
               </span>
             </div>
 
             {isSubmitted ? (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-8 text-center my-6">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-emerald-50 border border-emerald-200 rounded-2xl p-8 text-center my-6"
+              >
                 <div className="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-600">
                   <CheckCircle className="w-8 h-8" />
                 </div>
@@ -175,11 +193,11 @@ export default function RegistrationAndInquiry({ selectedCategory }: Registratio
                 <button
                   type="button"
                   onClick={() => setIsSubmitted(false)}
-                  className="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold rounded-xl text-sm transition"
+                  className="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold rounded-xl text-sm transition active:scale-95 cursor-pointer"
                 >
                   Register Another Student
                 </button>
-              </div>
+              </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 {errorMessage && (
@@ -189,7 +207,7 @@ export default function RegistrationAndInquiry({ selectedCategory }: Registratio
                 )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 font-ne">
                       {t('registration.fullName')} *
                     </label>
                     <input
@@ -198,12 +216,12 @@ export default function RegistrationAndInquiry({ selectedCategory }: Registratio
                       placeholder="e.g. Ramesh Thapa"
                       value={formData.fullName}
                       onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-600 bg-white text-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 bg-white text-sm transition-all duration-200"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 font-ne">
                       {t('registration.phone')} *
                     </label>
                     <input
@@ -212,20 +230,20 @@ export default function RegistrationAndInquiry({ selectedCategory }: Registratio
                       placeholder="98XXXXXXXX"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-600 bg-white text-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 bg-white text-sm transition-all duration-200"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 font-ne">
                       {t('registration.preferredCategory')}
                     </label>
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-600 bg-white text-sm cursor-pointer"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 bg-white text-sm cursor-pointer transition-all duration-200 font-ne"
                     >
                       <option value="Category B (Car / Jeep)">Category B: Car / Jeep (४ पाङ्ग्रे)</option>
                       <option value="Category A (Motorcycle)">Category A: Motorcycle (२ पाङ्ग्रे)</option>
@@ -236,13 +254,13 @@ export default function RegistrationAndInquiry({ selectedCategory }: Registratio
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 font-ne">
                       {t('registration.preferredTime')}
                     </label>
                     <select
                       value={formData.shift}
                       onChange={(e) => setFormData({ ...formData, shift: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-600 bg-white text-sm cursor-pointer"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 bg-white text-sm cursor-pointer transition-all duration-200 font-ne"
                     >
                       <option value="Morning (6:00 AM - 10:00 AM)">{t('registration.morning')}</option>
                       <option value="Day (11:00 AM - 3:00 PM)">{t('registration.day')}</option>
@@ -252,7 +270,7 @@ export default function RegistrationAndInquiry({ selectedCategory }: Registratio
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 font-ne">
                     {t('registration.notes')}
                   </label>
                   <textarea
@@ -260,16 +278,17 @@ export default function RegistrationAndInquiry({ selectedCategory }: Registratio
                     placeholder="Tell us if you have tried trial before, have any specific schedule preferences, etc."
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-600 bg-white text-sm"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 bg-white text-sm transition-all duration-200"
                   ></textarea>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-4 bg-brand-700 hover:bg-brand-800 text-white font-bold rounded-2xl shadow-md transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer text-base"
+                  disabled={isSubmitting}
+                  className="w-full py-4 bg-red-600 hover:bg-red-700 active:scale-[0.98] text-white font-bold rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer text-base disabled:opacity-70 font-ne"
                 >
                   <Send className="w-4 h-4" />
-                  <span>{t('registration.submitBooking')}</span>
+                  <span>{isSubmitting ? (isNepali ? "पठाउँदै..." : "Submitting...") : t('registration.submitBooking')}</span>
                 </button>
               </form>
             )}
@@ -277,7 +296,7 @@ export default function RegistrationAndInquiry({ selectedCategory }: Registratio
             {/* Embedded Google Form Option Accordion */}
             <div className="mt-8 pt-6 border-t border-slate-200">
               <details className="group">
-                <summary className="text-xs font-bold text-slate-600 uppercase tracking-wider cursor-pointer list-none flex items-center justify-between hover:text-brand-700">
+                <summary className="text-xs font-bold text-slate-600 uppercase tracking-wider cursor-pointer list-none flex items-center justify-between hover:text-red-600 transition-colors">
                   <span>Or use standard embedded Google Forms questionnaire</span>
                   <span className="transition group-open:rotate-180">▼</span>
                 </summary>
@@ -298,7 +317,7 @@ export default function RegistrationAndInquiry({ selectedCategory }: Registratio
               </details>
             </div>
 
-          </div>
+          </motion.div>
 
         </div>
       </div>

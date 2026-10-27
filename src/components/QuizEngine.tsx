@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'motion/react';
 import confetti from 'canvas-confetti';
 import { RAW_QUESTION_BANK, QUESTION_CATEGORIES, QuestionItem } from '../data/questionBank';
 import { TrafficSignVisual } from './TrafficSignVisual';
@@ -20,6 +21,7 @@ import {
   AlertCircle,
   HelpCircle
 } from 'lucide-react';
+import { ScrollReveal } from './motion/AppleMotion';
 
 export default function QuizEngine() {
   const { t, i18n } = useTranslation();
@@ -244,8 +246,8 @@ export default function QuizEngine() {
     <section id="practice-test" className="py-20 bg-slate-100 scroll-mt-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         
-        {/* Header */}
-        <div className="text-center mb-10">
+        {/* Header with Scroll Reveal */}
+        <ScrollReveal className="text-center mb-10">
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-brand-100 text-brand-700 font-bold text-xs tracking-wider uppercase rounded-full mb-3 border border-brand-200">
             <BookOpen className="w-3.5 h-3.5" />
             {isNepali ? "नेपाल DoTM आधिकारिक पाठ्यक्रममा आधारित" : "Official Nepal DoTM Syllabus Bank"}
@@ -268,7 +270,7 @@ export default function QuizEngine() {
                 : "300+ Verified Practice Questions • All 12 Syllabus Modules • 70% Pass Rule"}
             </span>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* STATE 1: PRACTICE MODE CONFIGURATION SCREEN */}
         {!hasStarted && !isFinished && (

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   ISHIHARA_PLATES, 
   ISHIHARA_DISCLAIMER, 
@@ -26,6 +27,7 @@ import {
   ShieldCheck,
   ChevronRight
 } from 'lucide-react';
+import { ScrollReveal } from './motion/AppleMotion';
 
 type TestMode = 'practice' | 'timed' | 'full';
 
@@ -267,8 +269,8 @@ export default function EyeTestSection() {
     <section id="eye-test" className="py-20 bg-slate-50 border-t border-slate-200 scroll-mt-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         
-        {/* Section Header */}
-        <div className="text-center mb-8">
+        {/* Section Header with Scroll Reveal */}
+        <ScrollReveal className="text-center mb-8">
           <span className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-100 text-blue-800 font-bold text-xs uppercase tracking-wider rounded-full mb-3 border border-blue-200 font-ne shadow-xs">
             <Eye className="w-4 h-4 text-blue-700" />
             <span>{isNepali ? "रङ्गीन बिन्दु पहिचान अभ्यास" : "Ishihara-Style Plate Recognition"}</span>
@@ -281,16 +283,18 @@ export default function EyeTestSection() {
               ? "सवारी चालक अनुमतिपत्रको स्वास्थ्य परीक्षणमा सोधिने रङ्गीन बिन्दु ढाँचा (Colour-Dot Plates) बाट लुकेको नम्बर पहिचान गर्ने अभ्यास गर्नुहोस्।"
               : "Identify hidden numbers inside authentic pseudoisochromatic colour-dot plates inspired by driving licence preliminary vision assessments."}
           </p>
-        </div>
+        </ScrollReveal>
 
         {/* Clear Medical Non-Diagnostic Disclaimer Banner */}
-        <div className="bg-amber-50 border border-amber-300/80 rounded-2xl p-4 sm:p-5 mb-8 text-amber-950 text-xs sm:text-sm flex items-start gap-3 shadow-xs">
-          <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-          <div className="font-ne leading-relaxed">
-            <strong>{isNepali ? "महत्त्वपूर्ण शैक्षिक सूचना:" : "Educational Disclaimer:"}</strong>{' '}
-            {isNepali ? ISHIHARA_DISCLAIMER.ne : ISHIHARA_DISCLAIMER.en}
+        <ScrollReveal delay={0.08}>
+          <div className="bg-amber-50 border border-amber-300/80 rounded-2xl p-4 sm:p-5 mb-8 text-amber-950 text-xs sm:text-sm flex items-start gap-3 shadow-xs">
+            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div className="font-ne leading-relaxed">
+              <strong>{isNepali ? "महत्त्वपूर्ण शैक्षिक सूचना:" : "Educational Disclaimer:"}</strong>{' '}
+              {isNepali ? ISHIHARA_DISCLAIMER.ne : ISHIHARA_DISCLAIMER.en}
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* ========================================================
             SCREEN 1: SETUP SCREEN & MODE SELECTION
@@ -891,54 +895,64 @@ export default function EyeTestSection() {
       {/* ========================================================
           FULLSCREEN / ENLARGED MODAL INSPECTION
       ======================================================== */}
-      {isModalZoom && currentQ && (
-        <div 
-          className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
-          onClick={() => setIsModalZoom(false)}
-        >
-          <div 
-            className="bg-white rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl border border-slate-700 relative flex flex-col items-center"
-            onClick={(e) => e.stopPropagation()}
+      <AnimatePresence>
+        {isModalZoom && currentQ && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4 cursor-pointer"
+            onClick={() => setIsModalZoom(false)}
           >
-            <div className="w-full flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
-              <div className="font-bold text-slate-900 text-sm font-ne">
-                {isNepali ? "विस्तृत प्लेट निरीक्षण (High-Resolution Zoom)" : "Enlarged Plate Inspection"}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="bg-white rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl border border-slate-700 relative flex flex-col items-center cursor-default"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="w-full flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                <div className="font-bold text-slate-900 text-sm font-ne">
+                  {isNepali ? "विस्तृत प्लेट निरीक्षण (High-Resolution Zoom)" : "Enlarged Plate Inspection"}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsModalZoom(false)}
+                  className="p-1.5 rounded-full hover:bg-slate-100 text-slate-600 cursor-pointer transition-colors active:scale-95"
+                >
+                  <Minimize2 className="w-5 h-5" />
+                </button>
               </div>
+
+              <div className="p-4 bg-stone-100 rounded-3xl border border-stone-200">
+                <IshiharaPlateSvg
+                  number={currentQ.plate.number}
+                  paletteId={currentQ.plate.paletteId}
+                  seed={currentQ.plate.seed}
+                  size={Math.min(480, typeof window !== 'undefined' ? window.innerWidth - 64 : 440)}
+                  showSolutionOutline={showSolutionOutline}
+                />
+              </div>
+
+              <p className="mt-4 text-xs text-slate-500 text-center font-ne">
+                {isNepali 
+                  ? "बिन्दुहरूको रङ र ढाँचा नजिकबाट निरीक्षण गर्नुहोस्। बन्द गर्न बाहिर क्लिक गर्नुहोस्।"
+                  : "Inspect the colored dots closely. Tap outside or the close icon to return to options."}
+              </p>
+
               <button
                 type="button"
                 onClick={() => setIsModalZoom(false)}
-                className="p-1.5 rounded-full hover:bg-slate-100 text-slate-600 cursor-pointer"
+                className="mt-4 px-6 py-2.5 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow-xs"
               >
-                <Minimize2 className="w-5 h-5" />
+                {isNepali ? "बन्द गर्नुहोस्" : "Close Inspection"}
               </button>
-            </div>
-
-            <div className="p-4 bg-stone-100 rounded-3xl border border-stone-200">
-              <IshiharaPlateSvg
-                number={currentQ.plate.number}
-                paletteId={currentQ.plate.paletteId}
-                seed={currentQ.plate.seed}
-                size={Math.min(480, typeof window !== 'undefined' ? window.innerWidth - 64 : 440)}
-                showSolutionOutline={showSolutionOutline}
-              />
-            </div>
-
-            <p className="mt-4 text-xs text-slate-500 text-center font-ne">
-              {isNepali 
-                ? "बिन्दुहरूको रङ र ढाँचा नजिकबाट निरीक्षण गर्नुहोस्। बन्द गर्न बाहिर क्लिक गर्नुहोस्।"
-                : "Inspect the colored dots closely. Tap outside or the close icon to return to options."}
-            </p>
-
-            <button
-              type="button"
-              onClick={() => setIsModalZoom(false)}
-              className="mt-4 px-6 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl"
-            >
-              {isNepali ? "बन्द गर्नुहोस्" : "Close Inspection"}
-            </button>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </section>
   );

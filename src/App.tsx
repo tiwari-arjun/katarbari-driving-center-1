@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'motion/react';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import QuizEngine from './components/QuizEngine';
 import RegistrationAndInquiry from './components/RegistrationAndInquiry';
@@ -9,6 +10,7 @@ import CoursesSection from './components/CoursesSection';
 import EyeTestSection from './components/EyeTestSection';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminDashboard from './components/admin/AdminDashboard';
+import { ScrollParallax, ScrollReveal, TiltCard } from './components/motion/AppleMotion';
 import { ASSET_IMAGES } from './assets/assetImages';
 import { 
   Car, 
@@ -23,11 +25,11 @@ import {
   X, 
   ShieldCheck, 
   Lock, 
-  Eye,
-  ArrowRight,
-  Shield,
-  FileText,
-  UserCheck
+  Eye, 
+  ArrowRight, 
+  Shield, 
+  FileText, 
+  UserCheck 
 } from 'lucide-react';
 
 export default function App() {
@@ -38,6 +40,26 @@ export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [selectedCourseCategory, setSelectedCourseCategory] = useState<string>('Category B (Car / Jeep)');
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Apple-inspired scroll-linked hero motion
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: heroProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+
+  const smoothHeroProgress = useSpring(heroProgress, {
+    stiffness: 90,
+    damping: 25,
+    mass: 0.8,
+    restDelta: 0.001
+  });
+
+  const heroContentY = useTransform(smoothHeroProgress, [0, 1], [0, 42]);
+  const heroContentOpacity = useTransform(smoothHeroProgress, [0, 0.7, 1], [1, 0.9, 0.35]);
+  const heroImageY = useTransform(smoothHeroProgress, [0, 1], [0, 65]);
+  const heroImageScale = useTransform(smoothHeroProgress, [0, 1], [1.02, 0.96]);
 
   // Admin View State
   const [viewMode, setViewMode] = useState<'public' | 'admin'>('public');
@@ -45,6 +67,16 @@ export default function App() {
     return localStorage.getItem('katarbari_admin_token');
   });
   const [adminUser, setAdminUser] = useState<any>(null);
+
+  // Scroll listener for sticky header elevation and micro-interactions
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 15);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Verified Business Contact Details
   const PHONE_NUMBER = "9856011009";
@@ -169,12 +201,16 @@ export default function App() {
       </div>
 
       {/* 2. MAIN NAVBAR - TOP BAR CONTRACT */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
+      <header className={`sticky top-0 z-40 transition-all duration-300 ease-out ${
+        isScrolled 
+          ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200/90' 
+          : 'bg-white/90 backdrop-blur-sm border-b border-slate-200'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
           
           {/* Brand Wordmark */}
-          <a href="#" className="flex items-center gap-3 shrink-0">
-            <div className="w-10 h-10 bg-slate-900 text-white rounded-lg flex items-center justify-center font-black text-xl tracking-tighter">
+          <a href="#" className="flex items-center gap-3 shrink-0 group">
+            <div className="w-10 h-10 bg-slate-900 text-white rounded-lg flex items-center justify-center font-black text-xl tracking-tighter group-hover:bg-red-600 transition-colors duration-300 shadow-xs">
               K
             </div>
             <div>
@@ -187,26 +223,25 @@ export default function App() {
             </div>
           </a>
 
-          {/* Clean Desktop Navigation Links (Single-line text, zero pills) */}
+          {/* Clean Desktop Navigation Links with animated micro-interaction underlines */}
           <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-700">
-            <a href="#about" className="hover:text-slate-900 transition-colors font-ne">
-              {t('nav.about')}
-            </a>
-            <a href="#courses" className="hover:text-slate-900 transition-colors font-ne">
-              {t('nav.courses')}
-            </a>
-            <a href="#trial-field" className="hover:text-slate-900 transition-colors font-ne">
-              {t('nav.trialTrack')}
-            </a>
-            <a href="#practice-test" className="hover:text-slate-900 transition-colors font-ne">
-              {t('nav.practice')}
-            </a>
-            <a href="#eye-test" className="hover:text-slate-900 transition-colors font-ne">
-              {t('nav.eyeTest')}
-            </a>
-            <a href="#register" className="hover:text-slate-900 transition-colors font-ne">
-              {t('nav.contact')}
-            </a>
+            {[
+              { href: '#about', label: t('nav.about') },
+              { href: '#courses', label: t('nav.courses') },
+              { href: '#trial-field', label: t('nav.trialTrack') },
+              { href: '#practice-test', label: t('nav.practice') },
+              { href: '#eye-test', label: t('nav.eyeTest') },
+              { href: '#register', label: t('nav.contact') }
+            ].map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="relative py-1 hover:text-slate-950 transition-colors duration-200 font-ne group cursor-pointer"
+              >
+                <span>{link.label}</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 rounded-full transition-all duration-300 ease-out group-hover:w-full" />
+              </a>
+            ))}
           </nav>
 
           {/* Right Action Cluster: Language Switcher + Enquire Now CTA */}
@@ -215,7 +250,7 @@ export default function App() {
 
             <a
               href="#register"
-              className="hidden sm:inline-flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors shadow-xs font-ne"
+              className="hidden sm:inline-flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 active:scale-[0.98] text-white text-xs font-bold rounded-lg transition-all duration-200 shadow-xs hover:shadow-md font-ne cursor-pointer"
             >
               {isNepali ? "भर्ना / सोधपुछ" : "Enquire Now"}
             </a>
@@ -224,7 +259,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none"
+              className="lg:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 active:scale-95 transition-all focus:outline-none cursor-pointer"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -232,194 +267,255 @@ export default function App() {
           </div>
         </div>
 
-        {/* Mobile Navigation Drawer */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-2">
-            <a 
-              href="#about" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-semibold text-slate-800 hover:text-red-600 font-ne"
+        {/* Mobile Navigation Drawer with Smooth AnimatePresence */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-2 overflow-hidden shadow-lg"
             >
-              {t('nav.about')}
-            </a>
-            <a 
-              href="#courses" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-semibold text-slate-800 hover:text-red-600 font-ne"
-            >
-              {t('nav.courses')}
-            </a>
-            <a 
-              href="#trial-field" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-semibold text-slate-800 hover:text-red-600 font-ne"
-            >
-              {t('nav.trialTrack')}
-            </a>
-            <a 
-              href="#practice-test" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-semibold text-slate-800 hover:text-red-600 font-ne"
-            >
-              {t('nav.practice')}
-            </a>
-            <a 
-              href="#eye-test" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-semibold text-slate-800 hover:text-red-600 font-ne"
-            >
-              {t('nav.eyeTest')}
-            </a>
-            <a 
-              href="#faq" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-semibold text-slate-800 hover:text-red-600 font-ne"
-            >
-              FAQ
-            </a>
-            <a 
-              href="#register" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-semibold text-slate-800 hover:text-red-600 font-ne"
-            >
-              {t('nav.contact')}
-            </a>
-
-            <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
-              <a
-                href="#courses"
+              <a 
+                href="#about" 
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-2.5 bg-red-600 text-white font-bold rounded-lg text-sm font-ne"
+                className="block py-2 text-sm font-semibold text-slate-800 hover:text-red-600 transition-colors font-ne"
               >
-                {t('hero.ctaClasses')}
+                {t('nav.about')}
               </a>
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setViewMode('admin');
-                  window.location.hash = '#admin';
-                }}
-                className="w-full text-center py-2 text-xs font-medium text-slate-500 hover:text-slate-800"
+              <a 
+                href="#courses" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-sm font-semibold text-slate-800 hover:text-red-600 transition-colors font-ne"
               >
-                Staff Portal
-              </button>
-            </div>
-          </div>
-        )}
+                {t('nav.courses')}
+              </a>
+              <a 
+                href="#trial-field" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-sm font-semibold text-slate-800 hover:text-red-600 transition-colors font-ne"
+              >
+                {t('nav.trialTrack')}
+              </a>
+              <a 
+                href="#practice-test" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-sm font-semibold text-slate-800 hover:text-red-600 transition-colors font-ne"
+              >
+                {t('nav.practice')}
+              </a>
+              <a 
+                href="#eye-test" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-sm font-semibold text-slate-800 hover:text-red-600 transition-colors font-ne"
+              >
+                {t('nav.eyeTest')}
+              </a>
+              <a 
+                href="#faq" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-sm font-semibold text-slate-800 hover:text-red-600 transition-colors font-ne"
+              >
+                FAQ
+              </a>
+              <a 
+                href="#register" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-sm font-semibold text-slate-800 hover:text-red-600 transition-colors font-ne"
+              >
+                {t('nav.contact')}
+              </a>
+
+              <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
+                <a
+                  href="#courses"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full text-center py-2.5 bg-red-600 hover:bg-red-700 active:scale-[0.99] text-white font-bold rounded-lg text-sm font-ne transition-all shadow-xs"
+                >
+                  {t('hero.ctaClasses')}
+                </a>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setViewMode('admin');
+                    window.location.hash = '#admin';
+                  }}
+                  className="w-full text-center py-2 text-xs font-medium text-slate-500 hover:text-slate-800 cursor-pointer transition-colors"
+                >
+                  Staff Portal
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* MAIN CONTENT AREA */}
       <main className="flex-1">
         
-        {/* 3. HERO SECTION - ASYMMETRIC EDITORIAL SPLIT */}
-        <section className="bg-slate-50 border-b border-slate-200 py-16 sm:py-24">
+        {/* 3. HERO SECTION - ASYMMETRIC EDITORIAL SPLIT WITH SCROLL-LINKED PARALLAX */}
+        <section ref={heroRef} className="bg-slate-50 border-b border-slate-200 py-16 sm:py-24 overflow-hidden relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
               
-              {/* Left Column: Authentic Brand Typography & CTAs */}
-              <div className="lg:col-span-7 space-y-6">
+              {/* Left Column: Authentic Brand Typography & CTAs with smooth scroll-linked drift */}
+              <motion.div 
+                style={{ y: heroContentY, opacity: heroContentOpacity }}
+                className="lg:col-span-7 space-y-6 will-change-transform"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.1,
+                      delayChildren: 0.05
+                    }
+                  }
+                }}
+              >
                 
                 {/* Clean tracking label with local SEO context */}
-                <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-red-600 uppercase font-ne">
+                <motion.div 
+                  variants={{
+                    hidden: { opacity: 0, y: 12 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } }
+                  }}
+                  className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-red-600 uppercase font-ne"
+                >
                   <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
                   <span>{isNepali ? "वालिङ-११, स्याङ्जा • कटरबारी ड्राइभिङ सेन्टर" : "Waling-11, Syangja • Katarbari Driving Center"}</span>
-                </div>
+                </motion.div>
 
                 {/* Primary H1 for Local SEO */}
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15] font-ne">
+                <motion.h1 
+                  variants={{
+                    hidden: { opacity: 0, y: 16 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }
+                  }}
+                  className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15] font-ne"
+                >
                   {isNepali ? (
                     <>वालिङ, स्याङ्जामा <span className="text-red-600">सुरक्षित ड्राइभिङ</span> तालिम।</>
                   ) : (
                     <>Professional <span className="text-red-600">Driving Training</span> in Waling, Syangja.</>
                   )}
-                </h1>
+                </motion.h1>
 
                 {/* Editorial Subheadline */}
-                <p className="text-base sm:text-lg text-slate-600 font-ne leading-relaxed max-w-2xl">
+                <motion.p 
+                  variants={{
+                    hidden: { opacity: 0, y: 16 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }
+                  }}
+                  className="text-base sm:text-lg text-slate-600 font-ne leading-relaxed max-w-2xl"
+                >
                   {isNepali 
                     ? "वालिङ नगरपालिका-११, स्याङ्जामा दक्ष प्रशिक्षकहरूद्वारा कार, मोटरसाइकल तथा स्कुटरको व्यावहारिक तालिम। सरकारी यातायात कार्यालय (DoTM) को ट्रायल फिल्ड मापदण्ड र ३००+ वस्तुगत प्रश्नहरूको पूर्ण तयारी।"
                     : "Looking for comprehensive car, motorbike, or scooter training in Waling, Syangja? Katarbari Driving Center provides certified instruction, authentic DoTM trial test practice grounds, and bilingual license written test preparation."}
-                </p>
+                </motion.p>
 
                 {/* Action Buttons */}
-                <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <motion.div 
+                  variants={{
+                    hidden: { opacity: 0, y: 16 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }
+                  }}
+                  className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3"
+                >
                   <a
                     href="#courses"
-                    className="inline-flex items-center justify-center px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-colors text-sm shadow-xs font-ne gap-2"
+                    className="inline-flex items-center justify-center px-6 py-3.5 bg-red-600 hover:bg-red-700 active:scale-[0.98] text-white font-bold rounded-lg transition-all duration-200 text-sm shadow-xs hover:shadow-md font-ne gap-2 group cursor-pointer"
                   >
                     <span>{t('hero.ctaClasses')}</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
                   </a>
 
                   <a
                     href="#practice-test"
-                    className="inline-flex items-center justify-center px-6 py-3.5 bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 font-bold rounded-lg transition-colors text-sm font-ne"
+                    className="inline-flex items-center justify-center px-6 py-3.5 bg-white hover:bg-slate-100 active:scale-[0.98] text-slate-800 border border-slate-300 hover:border-slate-400 font-bold rounded-lg transition-all duration-200 text-sm font-ne cursor-pointer"
                   >
                     <span>{t('hero.ctaPractice')}</span>
                   </a>
-                </div>
+                </motion.div>
 
                 {/* Trust Metrics Bar */}
-                <div className="pt-6 border-t border-slate-200/90 grid grid-cols-3 gap-4">
-                  <div>
-                    <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight font-ne">
+                <motion.div 
+                  variants={{
+                    hidden: { opacity: 0, y: 16 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }
+                  }}
+                  className="pt-6 border-t border-slate-200/90 grid grid-cols-3 gap-4"
+                >
+                  <div className="group">
+                    <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight font-ne transition-transform duration-200 group-hover:translate-y-[-1px]">
                       {isNepali ? "१,८००+" : "1,800+"}
                     </div>
                     <div className="text-xs text-slate-500 font-medium font-ne mt-0.5">
                       {isNepali ? "प्रमाणित चालकहरू" : "Certified Drivers"}
                     </div>
                   </div>
-                  <div>
-                    <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight font-ne">
+                  <div className="group">
+                    <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight font-ne transition-transform duration-200 group-hover:translate-y-[-1px]">
                       {isNepali ? "९६%" : "96%"}
                     </div>
                     <div className="text-xs text-slate-500 font-medium font-ne mt-0.5">
                       {isNepali ? "पहिलो पटकको सफलता" : "First-Try Pass Rate"}
                     </div>
                   </div>
-                  <div>
-                    <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight font-ne">
+                  <div className="group">
+                    <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight font-ne transition-transform duration-200 group-hover:translate-y-[-1px]">
                       {isNepali ? "१०+ वर्ष" : "10+ Years"}
                     </div>
                     <div className="text-xs text-slate-500 font-medium font-ne mt-0.5">
                       {isNepali ? "स्याङ्जामा सेवा" : "Serving Syangja"}
                     </div>
                   </div>
-                </div>
+                </motion.div>
 
-              </div>
+              </motion.div>
 
-              {/* Right Column: Real Automotive Training Photograph */}
-              <div className="lg:col-span-5">
-                <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-sm">
-                  <img
-                    src={ASSET_IMAGES.hero}
-                    alt="Driving instructor coaching a student driver on Waling training track"
-                    className="w-full h-80 sm:h-96 object-cover object-center"
-                    loading="eager"
-                  />
-                  {/* Subtle Caption Plate */}
-                  <div className="p-4 bg-white border-t border-slate-100 flex items-center justify-between text-xs">
-                    <span className="font-semibold text-slate-700 font-ne">
-                      {isNepali ? "वालिङ-११ ट्रायल फिल्डमा प्रत्यक्ष सिकाइ" : "Practical training at Waling-11 grounds"}
-                    </span>
-                    <span className="font-bold text-red-600 font-ne">
-                      {isNepali ? "DoTM ढाँचा" : "DoTM Replica"}
-                    </span>
+              {/* Right Column: Real Automotive Training Photograph with TiltCard and Scroll Parallax */}
+              <motion.div 
+                style={{ y: heroImageY, scale: heroImageScale }}
+                className="lg:col-span-5 will-change-transform"
+                initial={{ opacity: 0, scale: 0.96, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <TiltCard maxTilt={3.5} scaleOnHover={1.02}>
+                  <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-md hover:shadow-xl transition-shadow duration-500 group">
+                    <img
+                      src={ASSET_IMAGES.hero}
+                      alt="Driving instructor coaching a student driver on Waling training track"
+                      className="w-full h-80 sm:h-96 object-cover object-center group-hover:scale-104 transition-transform duration-700 ease-out"
+                      loading="eager"
+                    />
+                    {/* Subtle Caption Plate */}
+                    <div className="p-4 bg-white/95 backdrop-blur-xs border-t border-slate-100 flex items-center justify-between text-xs">
+                      <span className="font-semibold text-slate-700 font-ne">
+                        {isNepali ? "वालिङ-११ ट्रायल फिल्डमा प्रत्यक्ष सिकाइ" : "Practical training at Waling-11 grounds"}
+                      </span>
+                      <span className="font-bold text-red-600 font-ne">
+                        {isNepali ? "DoTM ढाँचा" : "DoTM Replica"}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </div>
+                </TiltCard>
+              </motion.div>
 
             </div>
           </div>
         </section>
 
         {/* 4. ABOUT US / WHY CHOOSE US (FEATURING OWNER KHEM KANTA TIWARI) */}
-        <section id="about" className="py-20 sm:py-28 bg-white scroll-mt-20">
+        <section id="about" className="py-20 sm:py-28 bg-white scroll-mt-20 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <div className="max-w-3xl mx-auto text-center mb-16">
+            <ScrollReveal className="max-w-3xl mx-auto text-center mb-16">
               <p className="text-xs font-bold uppercase tracking-widest text-red-600 mb-2 font-ne">
                 {isNepali ? "हाम्रो परिचय र विशेषताहरू" : "About Katarbari Driving Center"}
               </p>
@@ -429,42 +525,46 @@ export default function App() {
               <p className="mt-3 text-slate-600 font-ne text-base">
                 {t('whyUs.subtitle')}
               </p>
-            </div>
+            </ScrollReveal>
 
-            {/* Owner & Leadership Credibility Profile */}
-            <div className="mb-12 p-6 sm:p-8 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-red-600 text-white font-black text-2xl flex items-center justify-center shrink-0 shadow-xs">
-                  KT
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-bold text-slate-900 font-ne">
-                      {isNepali ? "खेम कान्त तिवारी" : "Khem Kanta Tiwari"}
-                    </h3>
-                    <span className="text-xs font-bold uppercase tracking-wider text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded font-ne">
-                      {isNepali ? "सञ्चालक / निर्देशक" : "Owner & Director"}
-                    </span>
+            {/* Owner & Leadership Credibility Profile with Subtle 3D Depth */}
+            <ScrollReveal delay={0.1}>
+              <TiltCard maxTilt={1.8} scaleOnHover={1.01}>
+                <div className="mb-12 p-6 sm:p-8 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-md transition-all duration-300">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-red-600 text-white font-black text-2xl flex items-center justify-center shrink-0 shadow-xs">
+                      KT
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-bold text-slate-900 font-ne">
+                          {isNepali ? "खेम कान्त तिवारी" : "Khem Kanta Tiwari"}
+                        </h3>
+                        <span className="text-xs font-bold uppercase tracking-wider text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded font-ne">
+                          {isNepali ? "सञ्चालक / निर्देशक" : "Owner & Director"}
+                        </span>
+                      </div>
+                      <p className="text-xs sm:text-sm text-slate-600 font-ne mt-1 max-w-2xl">
+                        {isNepali
+                          ? "सञ्चालक खेम कान्त तिवारीको नेतृत्वमा कटरबारी ड्राइभिङ सेन्टरले वालिङ-११, स्याङ्जामा प्रयोगात्मक तथा सुरक्षित सवारी चालक तालिम प्रदान गर्दछ। सिद्धार्थ राजमार्ग र पहाडी सडकमा सुरक्षित यात्राका लागि गुणस्तरीय प्रशिक्षण हाम्रो प्रतिबद्धता हो।"
+                          : "Under the leadership of owner Khem Kanta Tiwari, Katarbari Driving Center provides structured, safety-first driver training in Waling-11, Syangja. We combine comprehensive trial-track practice with practical hill and highway driving techniques."}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-xs sm:text-sm text-slate-600 font-ne mt-1 max-w-2xl">
-                    {isNepali
-                      ? "सञ्चालक खेम कान्त तिवारीको नेतृत्वमा कटरबारी ड्राइभिङ सेन्टरले वालिङ-११, स्याङ्जामा प्रयोगात्मक तथा सुरक्षित सवारी चालक तालिम प्रदान गर्दछ। सिद्धार्थ राजमार्ग र पहाडी सडकमा सुरक्षित यात्राका लागि गुणस्तरीय प्रशिक्षण हाम्रो प्रतिबद्धता हो।"
-                      : "Under the leadership of owner Khem Kanta Tiwari, Katarbari Driving Center provides structured, safety-first driver training in Waling-11, Syangja. We combine comprehensive trial-track practice with practical hill and highway driving techniques."}
-                  </p>
+                  <div className="shrink-0 text-right">
+                    <a
+                      href={`tel:${PHONE_NUMBER}`}
+                      className="inline-flex items-center gap-2 text-xs font-bold text-slate-800 bg-white hover:bg-slate-100 active:scale-95 border border-slate-300 hover:border-slate-400 px-4 py-2.5 rounded-lg transition-all duration-200 shadow-xs"
+                    >
+                      <Phone className="w-3.5 h-3.5 text-red-600" />
+                      <span>Call {PHONE_NUMBER}</span>
+                    </a>
+                  </div>
                 </div>
-              </div>
-              <div className="shrink-0 text-right">
-                <a
-                  href={`tel:${PHONE_NUMBER}`}
-                  className="inline-flex items-center gap-2 text-xs font-bold text-slate-800 bg-white hover:bg-slate-100 border border-slate-300 px-4 py-2.5 rounded-lg transition"
-                >
-                  <Phone className="w-3.5 h-3.5 text-red-600" />
-                  <span>Call {PHONE_NUMBER}</span>
-                </a>
-              </div>
-            </div>
+              </TiltCard>
+            </ScrollReveal>
 
-            {/* 4 Core Pillars */}
+            {/* 4 Core Pillars with TiltCards and Staggered Scroll Reveal */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 {
@@ -492,48 +592,53 @@ export default function App() {
                   tag: isNepali ? "३००+ प्रश्नहरू" : "Written + Eye"
                 }
               ].map((item, idx) => (
-                <div 
-                  key={idx} 
-                  className="p-6 rounded-xl border border-slate-200 bg-white hover:border-slate-300 transition-colors flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center">
-                        {item.icon}
+                <ScrollReveal key={idx} delay={idx * 0.08} yOffset={20}>
+                  <TiltCard maxTilt={3} scaleOnHover={1.02} className="h-full">
+                    <div className="p-6 rounded-xl border border-slate-200 bg-white hover:border-red-200 hover:shadow-lg transition-all duration-300 flex flex-col justify-between h-full group">
+                      <div>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="w-10 h-10 rounded-lg bg-red-50 group-hover:bg-red-100 group-hover:scale-105 transition-all duration-300 flex items-center justify-center">
+                            {item.icon}
+                          </div>
+                          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider font-ne">
+                            {item.tag}
+                          </span>
+                        </div>
+                        <h3 className="font-bold text-slate-900 text-lg mb-2 font-ne group-hover:text-red-600 transition-colors duration-200">
+                          {item.title}
+                        </h3>
+                        <p className="text-sm text-slate-600 leading-relaxed font-ne">
+                          {item.desc}
+                        </p>
                       </div>
-                      <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider font-ne">
-                        {item.tag}
-                      </span>
                     </div>
-                    <h3 className="font-bold text-slate-900 text-lg mb-2 font-ne">
-                      {item.title}
-                    </h3>
-                    <p className="text-sm text-slate-600 leading-relaxed font-ne">
-                      {item.desc}
-                    </p>
-                  </div>
-                </div>
+                  </TiltCard>
+                </ScrollReveal>
               ))}
             </div>
 
-            {/* Local Context Callout */}
-            <div className="mt-12 p-6 sm:p-8 rounded-2xl bg-slate-900 text-white flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="space-y-1 text-center md:text-left">
-                <h4 className="text-lg font-bold font-ne">
-                  {isNepali ? "वालिङ, स्याङ्जा र सिद्धार्थ राजमार्गको भौगोलिक अवस्था अनुसारको तालिम" : "Trained for Syangja's Roads and Siddhartha Highway Driving"}
-                </h4>
-                <p className="text-xs sm:text-sm text-slate-300 font-ne max-w-2xl">
-                  {isNepali 
-                    ? "पहाडी घुम्ती, उकालो-ओरालो, ब्रेक र क्लच नियन्त्रणको विशेष व्यावहारिक अभ्यास गराइन्छ।" 
-                    : "Learn defensive steering, clutch-biting on steep hills, and confident cornering tailored to Nepal's hill highway conditions."}
-                </p>
-              </div>
-              <a
-                href="#courses"
-                className="shrink-0 px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg text-xs transition-colors font-ne"
-              >
-                {t('hero.ctaClasses')}
-              </a>
+            {/* Local Context Callout with Scroll Parallax */}
+            <div className="mt-12">
+              <ScrollParallax offsetY={[-10, 10]} scale={[1.015, 1.0]}>
+                <div className="p-6 sm:p-8 rounded-2xl bg-slate-900 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                  <div className="space-y-1 text-center md:text-left">
+                    <h4 className="text-lg font-bold font-ne">
+                      {isNepali ? "वालिङ, स्याङ्जा र सिद्धार्थ राजमार्गको भौगोलिक अवस्था अनुसारको तालिम" : "Trained for Syangja's Roads and Siddhartha Highway Driving"}
+                    </h4>
+                    <p className="text-xs sm:text-sm text-slate-300 font-ne max-w-2xl">
+                      {isNepali 
+                        ? "पहाडी घुम्ती, उकालो-ओरालो, ब्रेक र क्लच नियन्त्रणको विशेष व्यावहारिक अभ्यास गराइन्छ।" 
+                        : "Learn defensive steering, clutch-biting on steep hills, and confident cornering tailored to Nepal's hill highway conditions."}
+                    </p>
+                  </div>
+                  <a
+                    href="#courses"
+                    className="shrink-0 px-5 py-2.5 bg-red-600 hover:bg-red-700 active:scale-95 text-white font-bold rounded-lg text-xs transition-all duration-200 shadow-xs hover:shadow-md font-ne cursor-pointer"
+                  >
+                    {t('hero.ctaClasses')}
+                  </a>
+                </div>
+              </ScrollParallax>
             </div>
 
           </div>
@@ -551,11 +656,11 @@ export default function App() {
         {/* 8. EYE TEST PRACTICE (52 ISHIHARA COLOR DOT PLATES SIMULATION) */}
         <EyeTestSection />
 
-        {/* 9. FAQ SECTION */}
+        {/* 9. FAQ SECTION WITH SMOOTH ACCORDION TRANSITIONS */}
         <section id="faq" className="py-20 sm:py-28 bg-slate-50 border-t border-slate-200 scroll-mt-20">
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             
-            <div className="text-center mb-14">
+            <ScrollReveal className="text-center mb-14">
               <p className="text-xs font-bold uppercase tracking-widest text-red-600 mb-2 font-ne">
                 {isNepali ? "प्रायः सोधिने प्रश्नहरू" : "Frequently Asked Questions"}
               </p>
@@ -565,7 +670,7 @@ export default function App() {
               <p className="mt-2 text-slate-600 font-ne text-sm">
                 {t('faq.subtitle')}
               </p>
-            </div>
+            </ScrollReveal>
 
             <div className="space-y-3">
               {[
@@ -575,23 +680,42 @@ export default function App() {
               ].map((item, idx) => {
                 const isOpen = openFaq === idx;
                 return (
-                  <div key={idx} className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
+                  <motion.div 
+                    key={idx}
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-20px" }}
+                    transition={{ duration: 0.4, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                    className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs hover:border-slate-300 transition-colors"
+                  >
                     <button
                       type="button"
                       onClick={() => setOpenFaq(isOpen ? null : idx)}
-                      className="w-full text-left p-5 flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-50/70 transition"
+                      className="w-full text-left p-5 flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-50/70 transition-colors"
+                      aria-expanded={isOpen}
                     >
                       <span className="font-bold text-slate-900 text-base font-ne">
                         {item.q}
                       </span>
-                      <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                      <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform duration-300 ease-out shrink-0 ${isOpen ? 'rotate-180 text-red-600' : ''}`} />
                     </button>
-                    {isOpen && (
-                      <div className="px-5 pb-5 pt-1 text-sm text-slate-600 font-ne leading-relaxed border-t border-slate-100">
-                        {item.a}
-                      </div>
-                    )}
-                  </div>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          key="faq-content"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-5 pb-5 pt-1 text-sm text-slate-600 font-ne leading-relaxed border-t border-slate-100">
+                            {item.a}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
                 );
               })}
             </div>
